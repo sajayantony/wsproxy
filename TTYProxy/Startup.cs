@@ -53,11 +53,17 @@ namespace TTYProxy
                 {
                     if (context.WebSockets.IsWebSocketRequest)
                     {
+
                         WebSocket clientWs = await context.WebSockets.AcceptWebSocketAsync();
                         using (var ws = new ClientWebSocket())
                         {
-                            await ws.ConnectAsync(new Uri("https://localhost:8080"), 
-                                                CancellationToken.None);
+                            context.Request.CloneHeaders(ws.Options);
+                            var pathStr = context.Request.Path;
+                            Console.WriteLine("Requesting URI.." + pathStr);
+                            var remoteUri = new Uri("ws://127.0.0.1:8081" + pathStr);
+                            System.Console.WriteLine("Connecting to " + remoteUri);                            
+                            
+                            await ws.ConnectAsync(remoteUri, CancellationToken.None);
 
                             if (ws.State == WebSocketState.Open)
                             {
