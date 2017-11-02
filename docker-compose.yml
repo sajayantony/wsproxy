@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  ttyproxy:
+    image: ttyproxy
+    build:
+      context: .
+      dockerfile: TTYProxy/Dockerfile
